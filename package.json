@@ -1,0 +1,66 @@
+{
+  "name": "@appril/more",
+  "version": "0.2.0",
+  "description": "Appril More",
+  "author": "Slee Woo",
+  "license": "MIT",
+  "engines": {
+    "node": "20.8",
+    "npm": "10"
+  },
+  "files": [
+    "pkg/*"
+  ],
+  "// ✨ seems exports.types not fully supported by all editors yet?": "",
+  "typesVersions": {
+    "*": {
+      "fetch": [
+        "./pkg/fetch/index.d.ts"
+      ],
+      "request": [
+        "./pkg/request/index.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    "./fetch": {
+      "import": "./pkg/fetch/index.js",
+      "types": "./pkg/fetch/index.d.ts"
+    },
+    "./request": {
+      "require": "./pkg/request/index.js",
+      "types": "./pkg/request/index.d.ts"
+    }
+  },
+  "scripts": {
+    "// ✨ build fetch": "",
+    "build:fetch": "esbundler lib/fetch/index.ts --format=esm --sourcemap=inline --outdir=pkg/fetch",
+    "postbuild:fetch": "tsc -p lib/fetch/tsconfig.json",
+    "// ✨ build request": "",
+    "build:request": "esbundler lib/request/index.ts --sourcemap=inline --outdir=pkg/request",
+    "postbuild:request": "tsc -p lib/request/tsconfig.json",
+    "// ✨ build": "",
+    "prebuild": "mkdir -p pkg; find pkg -type f -exec rm -fv {} \\;",
+    "build": "for e in fetch request; do npm run build:$e; done",
+    "// ✨ publish": "",
+    "prepub": "npm run build",
+    "pub": "npm pub"
+  },
+  "dependencies": {
+    "@appril/core": "^0.2.0",
+    "follow-redirects": "^1.15.3",
+    "form-data": "^4.0.0",
+    "qs": "^6.11.2",
+    "vue-deepunref": "^1.0.1"
+  },
+  "devDependencies": {
+    "@appril/dev": "^0.2.0",
+    "@appril/scripts": "^0.2.0",
+    "@types/follow-redirects": "^1.14.3",
+    "@types/form-data": "^2.5.0",
+    "@types/node": "^20.8.8",
+    "@types/qs": "^6.9.9",
+    "esbuild": "^0.19.5",
+    "typescript": "^5.2.2"
+  }
+}

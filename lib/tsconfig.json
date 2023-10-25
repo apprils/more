@@ -1,0 +1,9 @@
+{
+  "extends": "@appril/dev/tsconfig.lib.json",
+  "include": [
+    "."
+  ],
+  "compilerOptions": {
+    "emitDeclarationOnly": true
+  }
+}

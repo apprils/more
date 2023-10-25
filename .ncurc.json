@@ -1,0 +1,7 @@
+{
+  "interactive": true,
+  "upgrade": true,
+  "dep": ["prod","dev","peer"],
+  "reject": [
+  ]
+}
