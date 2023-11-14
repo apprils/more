@@ -56,10 +56,10 @@
   "devDependencies": {
     "@appril/dev": "^0.2.2",
     "@appril/scripts": "^0.2.2",
-    "@types/follow-redirects": "^1.14.3",
+    "@types/follow-redirects": "^1.14.4",
     "@types/form-data": "^2.5.0",
-    "@types/node": "^20.8.9",
-    "@types/qs": "^6.9.9",
+    "@types/node": "^20.9.0",
+    "@types/qs": "^6.9.10",
     "esbuild": "^0.19.5",
     "typescript": "^5.2.2"
   }
