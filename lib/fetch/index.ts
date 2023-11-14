@@ -30,6 +30,7 @@ function fetch(
     stringify,
     responseMode,
     headers,
+    errorHandler,
     ...fetchConfig
   } = { ...config, ...opts }
 
@@ -96,6 +97,7 @@ function fetch(
             const error = new Error(data?.error || response.statusText) as HTTPError
             error.response = response
             error.body = data
+            errorHandler?.(error)
             throw error
           }
 

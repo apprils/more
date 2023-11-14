@@ -2,6 +2,7 @@
 export type Config = {
   unref: (payload: any) => any;
   responseMode: ResponseMode;
+  errorHandler?: (e: any) => void;
 }
 
 export type GenericObject = Record<string, any>
@@ -38,6 +39,7 @@ export type Options = Pick<
   unref?: Function;
   stringify?: Function;
   responseMode?: ResponseMode;
+  errorHandler?: (e: any) => void;
 }
 
 export type FetchMethod = <
