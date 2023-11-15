@@ -74,11 +74,18 @@ function fetch(
       }
 
       if ([ "GET", "DELETE" ].includes(method)) {
-        const defaultStringify = (data: GenericObject) => qs.stringify(data, { arrayFormat: "brackets" })
+
+        const defaultStringify = (data: GenericObject) => qs.stringify(data, {
+          encodeValuesOnly: true,
+          arrayFormat: "brackets",
+        })
+
         const query = "?" + (stringify || defaultStringify)(data)
+
         if (query.length > 1) {
           url += query
         }
+
       }
       else {
         config.body = (stringify || JSON.stringify)(data)
