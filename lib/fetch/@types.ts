@@ -46,7 +46,7 @@ export type FetchMethod = <
   T = unknown,
 >(...a: any[]) => Promise<T>
 
-export type FetchMapper = Record<APIMethod, FetchMethod>
+export type FetchMapper = Record<APIMethod | "del", FetchMethod>
 
 export interface HTTPError<T = any> extends Error {
   body: T;

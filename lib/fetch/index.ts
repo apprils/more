@@ -124,6 +124,7 @@ function fetch(
     put    : wrapper("PUT"),
     patch  : wrapper("PATCH"),
     delete : wrapper("DELETE"),
+    del    : wrapper("DELETE"),
   }
 
 }
