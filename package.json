@@ -47,7 +47,7 @@
     "pub": "npm pub"
   },
   "dependencies": {
-    "@appril/core": "^0.2.2",
+    "@appril/core": "^0.2.3",
     "follow-redirects": "^1.15.3",
     "form-data": "^4.0.0",
     "qs": "^6.11.2",
@@ -58,9 +58,9 @@
     "@appril/scripts": "^0.2.2",
     "@types/follow-redirects": "^1.14.4",
     "@types/form-data": "^2.5.0",
-    "@types/node": "^20.9.0",
+    "@types/node": "^20.10.1",
     "@types/qs": "^6.9.10",
-    "esbuild": "^0.19.5",
-    "typescript": "^5.2.2"
+    "esbuild": "^0.19.8",
+    "typescript": "^5.3.2"
   }
 }
