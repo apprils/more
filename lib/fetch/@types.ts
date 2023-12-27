@@ -2,6 +2,7 @@
 export type Config = {
   unref: (payload: any) => any;
   responseMode: ResponseMode;
+  errorHandler?: (e: any) => void;
 }
 
 export type GenericObject = Record<string, any>
@@ -38,13 +39,14 @@ export type Options = Pick<
   unref?: Function;
   stringify?: Function;
   responseMode?: ResponseMode;
+  errorHandler?: (e: any) => void;
 }
 
 export type FetchMethod = <
   T = unknown,
 >(...a: any[]) => Promise<T>
 
-export type FetchMapper = Record<APIMethod, FetchMethod>
+export type FetchMapper = Record<APIMethod | "del", FetchMethod>
 
 export interface HTTPError<T = any> extends Error {
   body: T;

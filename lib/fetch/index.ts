@@ -30,6 +30,7 @@ function fetch(
     stringify,
     responseMode,
     headers,
+    errorHandler,
     ...fetchConfig
   } = { ...config, ...opts }
 
@@ -73,11 +74,18 @@ function fetch(
       }
 
       if ([ "GET", "DELETE" ].includes(method)) {
-        const defaultStringify = (data: GenericObject) => qs.stringify(data, { arrayFormat: "brackets" })
+
+        const defaultStringify = (data: GenericObject) => qs.stringify(data, {
+          encodeValuesOnly: true,
+          arrayFormat: "brackets",
+        })
+
         const query = "?" + (stringify || defaultStringify)(data)
+
         if (query.length > 1) {
           url += query
         }
+
       }
       else {
         config.body = (stringify || JSON.stringify)(data)
@@ -96,6 +104,7 @@ function fetch(
             const error = new Error(data?.error || response.statusText) as HTTPError
             error.response = response
             error.body = data
+            errorHandler?.(error)
             throw error
           }
 
@@ -115,6 +124,7 @@ function fetch(
     put    : wrapper("PUT"),
     patch  : wrapper("PATCH"),
     delete : wrapper("DELETE"),
+    del    : wrapper("DELETE"),
   }
 
 }
