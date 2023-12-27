@@ -44,7 +44,8 @@
     "build": "for e in fetch request; do npm run build:$e; done",
     "// ✨ publish": "",
     "prepub": "npm run build",
-    "pub": "npm pub"
+    "pub": "npm pub",
+    "postpub": "mkdir -p var/pub; npm pack --pack-destination var/pub"
   },
   "dependencies": {
     "@appril/core": "^0.2.3",
