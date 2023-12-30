@@ -41,11 +41,13 @@
     "postbuild:request": "tsc -p lib/request/tsconfig.json",
     "// ✨ build": "",
     "prebuild": "mkdir -p pkg; find pkg -type f -exec rm -fv {} \\;",
-    "build": "for e in fetch request; do npm run build:$e; done",
-    "// ✨ publish": "",
-    "prepub": "npm run build",
-    "pub": "npm pub",
-    "postpub": "mkdir -p var/pub; npm pack --pack-destination var/pub"
+    "build": "for e in fetch request; do npm run build:$e; done"
+  },
+  "release-it": {
+    "hooks": {
+      "before:init": [ "npm run build" ],
+      "after:release": [ "mkdir -p var/pub", "npm pack --pack-destination var/pub" ]
+    }
   },
   "dependencies": {
     "@appril/core": "^0.2.7",
