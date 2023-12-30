@@ -48,20 +48,20 @@
     "postpub": "mkdir -p var/pub; npm pack --pack-destination var/pub"
   },
   "dependencies": {
-    "@appril/core": "^0.2.6",
+    "@appril/core": "^0.2.7",
     "follow-redirects": "^1.15.3",
     "form-data": "^4.0.0",
     "qs": "^6.11.2",
     "vue-deepunref": "^1.0.1"
   },
   "devDependencies": {
-    "@appril/dev": "^0.2.2",
-    "@appril/scripts": "^0.2.2",
+    "@appril/dev": "^0.2.3",
+    "@appril/scripts": "^0.2.3",
     "@types/follow-redirects": "^1.14.4",
     "@types/form-data": "^2.5.0",
-    "@types/node": "^20.10.5",
+    "@types/node": "^20.10.6",
     "@types/qs": "^6.9.11",
-    "esbuild": "^0.19.10",
+    "esbuild": "^0.19.11",
     "release-it": "^17.0.1",
     "typescript": "^5.3.3"
   }
