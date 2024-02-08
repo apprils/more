@@ -33,6 +33,9 @@
     }
   },
   "scripts": {
+    "// ✨ lint": "",
+    "lint": "biome lint ./lib",
+    "// ✨ build": "",
     "esbundler": "func() { e=$1; shift; esbuild $e --bundle --platform=node --target=node20 --packages=external $*; }; func",
     "// ✨ build fetch": "",
     "build:fetch": "npm run esbundler -- lib/fetch/index.ts --format=esm --sourcemap=inline --outdir=pkg/fetch",
@@ -40,18 +43,14 @@
     "// ✨ build request": "",
     "build:request": "npm run esbundler -- lib/request/index.ts --sourcemap=inline --outdir=pkg/request",
     "postbuild:request": "tsc -p lib/request/tsconfig.json",
-    "// ✨ build": "",
+    "// ✨ build package": "",
     "prebuild": "mkdir -p pkg; find pkg -type f -exec rm -fv {} \\;",
-    "build": "for e in fetch request; do npm run build:$e; done"
+    "build": "set -e; npm run lint; for e in fetch request; do npm run build:$e; done"
   },
   "release-it": {
     "hooks": {
       "before:init": [
         "npm run build"
-      ],
-      "after:release": [
-        "mkdir -p var/pub",
-        "npm pack --pack-destination var/pub"
       ]
     }
   },
@@ -63,6 +62,7 @@
   },
   "devDependencies": {
     "@appril/tsconfig": "^0.2.2",
+    "@biomejs/biome": "^1.5.3",
     "@types/follow-redirects": "^1.14.4",
     "@types/form-data": "^2.5.0",
     "@types/node": "^20.11.5",
