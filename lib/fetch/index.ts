@@ -1,30 +1,28 @@
-
 import qs from "qs";
 
 import type {
-  Options, GenericObject, HTTPError,
-  FetchMethod, FetchMapper,
+  Options,
+  GenericObject,
+  HTTPError,
+  FetchMethod,
+  FetchMapper,
 } from "./@types";
 
 import config from "./config";
 
-export { config, fetch }
+export { config, fetch };
 export * from "./@types";
 
-type PathEntry = string | number
+type PathEntry = string | number;
 
-type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 const defaultHeaders = {
-  "Accept": "application/json",
+  Accept: "application/json",
   "Content-Type": "application/json",
-}
+};
 
-function fetch(
-  base: string | URL,
-  opts?: Options,
-): FetchMapper {
-
+function fetch(base: string | URL, opts?: Options): FetchMapper {
   const {
     unref,
     stringify,
@@ -32,12 +30,9 @@ function fetch(
     headers,
     errorHandler,
     ...fetchConfig
-  } = { ...config, ...opts }
+  } = { ...config, ...opts };
 
-  function wrapper(
-    method: HTTPMethod,
-  ): FetchMethod {
-
+  function wrapper(method: HTTPMethod): FetchMethod {
     // no path no data
     function _wrapper<T>(): Promise<T>;
 
@@ -48,106 +43,100 @@ function fetch(
     function _wrapper<T>(data: GenericObject): Promise<T>;
 
     // path and data
-    function _wrapper<T>(...args: [ ...PathEntry[], GenericObject ]): Promise<T>;
+    function _wrapper<T>(...args: [...PathEntry[], GenericObject]): Promise<T>;
 
-    function _wrapper<T>(...args: any[]): Promise<T> {
-
-      let path: PathEntry[] = []
-      let data: GenericObject = {}
+    function _wrapper<T>(...args: unknown[]): Promise<T> {
+      let path: PathEntry[] = [];
+      let data: GenericObject = {};
 
       if (isObject(args[args.length - 1])) {
-
-        path = args.slice(0, args.length - 1) as PathEntry[]
-        data = unref(args[args.length - 1]) as GenericObject
-
-      }
-      else {
-        path = args as PathEntry[]
+        path = args.slice(0, args.length - 1) as PathEntry[];
+        data = unref(args[args.length - 1]) as GenericObject;
+      } else {
+        path = args as PathEntry[];
       }
 
-      let url = join(String(base), ...path)
+      let url = join(String(base), ...path);
 
-      let config: Options & { method: HTTPMethod; body?: string } = {
+      const config: Options & { method: HTTPMethod; body?: string } = {
         ...fetchConfig,
         headers: { ...defaultHeaders, ...headers },
         method,
-      }
+      };
 
-      if ([ "GET", "DELETE" ].includes(method)) {
+      if (["GET", "DELETE"].includes(method)) {
+        const defaultStringify = (data: GenericObject) =>
+          qs.stringify(data, {
+            encodeValuesOnly: true,
+            arrayFormat: "brackets",
+          });
 
-        const defaultStringify = (data: GenericObject) => qs.stringify(data, {
-          encodeValuesOnly: true,
-          arrayFormat: "brackets",
-        })
-
-        const query = "?" + (stringify || defaultStringify)(data)
+        const query = ["?", (stringify || defaultStringify)(data)].join("");
 
         if (query.length > 1) {
-          url += query
+          url += query;
         }
-
-      }
-      else {
-        config.body = (stringify || JSON.stringify)(data)
+      } else {
+        config.body = JSON.stringify(data);
       }
 
-      return window.fetch(url, config)
-        .then((response) => Promise.all([
-          response,
-          responseMode === "raw"
-            ? response
-            : response[responseMode]().catch(() => null)
-        ]))
-        .then(([ response, data ]) => {
-
+      return window
+        .fetch(url, config)
+        .then((response) =>
+          Promise.all([
+            response,
+            responseMode === "raw"
+              ? response
+              : response[responseMode]().catch(() => null),
+          ]),
+        )
+        .then(([response, data]) => {
           if (Math.floor(response.status / 100) !== 2) {
-            const error = new Error(data?.error || response.statusText) as HTTPError
-            error.response = response
-            error.body = data
-            errorHandler?.(error)
-            throw error
+            const error = new Error(
+              data?.error || response.statusText,
+            ) as HTTPError;
+            error.response = response;
+            error.body = data;
+            errorHandler?.(error);
+            throw error;
           }
 
-          return data
-
-        })
-
+          return data;
+        });
     }
 
-    return _wrapper
-
+    return _wrapper;
   }
 
   return {
-    get    : wrapper("GET"),
-    post   : wrapper("POST"),
-    put    : wrapper("PUT"),
-    patch  : wrapper("PATCH"),
-    delete : wrapper("DELETE"),
-    del    : wrapper("DELETE"),
-  }
-
+    get: wrapper("GET"),
+    post: wrapper("POST"),
+    put: wrapper("PUT"),
+    patch: wrapper("PATCH"),
+    delete: wrapper("DELETE"),
+    del: wrapper("DELETE"),
+  };
 }
 
 const pathTypes: { [key: string]: boolean } = {
   "[object Number]": true,
   "[object String]": true,
-}
+};
 
-function isObject(arg: any) {
-  return Object.prototype.toString.call(arg) === "[object Object]"
+function isObject(arg: unknown) {
+  return Object.prototype.toString.call(arg) === "[object Object]";
 }
 
 function join(...args: PathEntry[]) {
-
   for (const a of args) {
-    const type = Object.prototype.toString.call(a)
+    const type = Object.prototype.toString.call(a);
     if (!pathTypes[type]) {
-      throw new Error(`join accepts only strings and numbers, ${ type } given`)
+      throw new Error(`join accepts only strings and numbers, ${type} given`);
     }
   }
 
-  return args.filter((e) => e).join("/").replace(/\/+/g, "/")
-
+  return args
+    .filter((e) => e)
+    .join("/")
+    .replace(/\/+/g, "/");
 }
-

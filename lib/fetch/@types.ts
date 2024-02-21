@@ -1,18 +1,16 @@
+type Unref = (v: unknown) => unknown;
+type Stringify = (o: Record<string | number, unknown>) => string;
+type ErrorHandler = (e: unknown) => void;
 
 export type Config = {
-  unref: (payload: any) => any;
+  unref: Unref;
   responseMode: ResponseMode;
-  errorHandler?: (e: any) => void;
-}
+  errorHandler?: ErrorHandler;
+};
 
-export type GenericObject = Record<string, any>
+export type GenericObject = Record<string, unknown>;
 
-export type APIMethod =
-  | "get"
-  | "post"
-  | "put"
-  | "patch"
-  | "delete"
+export type APIMethod = "get" | "post" | "put" | "patch" | "delete";
 
 export type ResponseMode =
   | "json"
@@ -20,7 +18,7 @@ export type ResponseMode =
   | "blob"
   | "formData"
   | "arrayBuffer"
-  | "raw"
+  | "raw";
 
 export type Options = Pick<
   RequestInit,
@@ -36,20 +34,17 @@ export type Options = Pick<
   | "signal"
   | "window"
 > & {
-  unref?: Function;
-  stringify?: Function;
+  unref?: Unref;
+  stringify?: Stringify;
   responseMode?: ResponseMode;
-  errorHandler?: (e: any) => void;
-}
+  errorHandler?: ErrorHandler;
+};
 
-export type FetchMethod = <
-  T = unknown,
->(...a: any[]) => Promise<T>
+export type FetchMethod = <T = unknown>(...a: unknown[]) => Promise<T>;
 
-export type FetchMapper = Record<APIMethod | "del", FetchMethod>
+export type FetchMapper = Record<APIMethod | "del", FetchMethod>;
 
-export interface HTTPError<T = any> extends Error {
+export interface HTTPError<T extends object = object> extends Error {
   body: T;
   response: Response;
 }
-
