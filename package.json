@@ -11,20 +11,9 @@
   "files": [
     "pkg/*"
   ],
-  "// ✨ seems exports.types not fully supported by all editors yet?": "",
-  "typesVersions": {
-    "*": {
-      "fetch": [
-        "./pkg/fetch/index.d.ts"
-      ],
-      "request": [
-        "./pkg/request/index.d.ts"
-      ]
-    }
-  },
   "exports": {
     "./fetch": {
-      "import": "./pkg/fetch/index.js",
+      "default": "./pkg/fetch/index.js",
       "types": "./pkg/fetch/index.d.ts"
     },
     "./request": {
@@ -33,19 +22,15 @@
     }
   },
   "scripts": {
-    "// ✨ lint": "",
+    "// ✨ linters": "",
     "lint": "biome lint ./lib",
+    "// ✨ types": "",
+    "tsc": "tsc --emitDeclarationOnly",
+    "// ✨ builders": "",
+    "esbuilder": "set -e; func() { e=$1; shift; esbuild lib/$e.ts --outfile=pkg/$e.js --bundle --platform=node --target=node20 --packages=external --sourcemap=inline $*; }; func",
     "// ✨ build": "",
-    "esbundler": "func() { e=$1; shift; esbuild $e --bundle --platform=node --target=node20 --packages=external $*; }; func",
-    "// ✨ build fetch": "",
-    "build:fetch": "npm run esbundler -- lib/fetch/index.ts --format=esm --sourcemap=inline --outdir=pkg/fetch",
-    "postbuild:fetch": "tsc -p lib/fetch/tsconfig.json",
-    "// ✨ build request": "",
-    "build:request": "npm run esbundler -- lib/request/index.ts --sourcemap=inline --outdir=pkg/request",
-    "postbuild:request": "tsc -p lib/request/tsconfig.json",
-    "// ✨ build package": "",
     "prebuild": "mkdir -p pkg; find pkg -type f -exec rm -fv {} \\;",
-    "build": "set -e; npm run lint; for e in fetch request; do npm run build:$e; done"
+    "build": "set -e; npm run lint; npm run tsc; for e in fetch/index request/index; do npm run esbuilder $e; done"
   },
   "release-it": {
     "hooks": {
@@ -57,18 +42,18 @@
   "dependencies": {
     "follow-redirects": "^1.15.5",
     "form-data": "^4.0.0",
-    "qs": "^6.11.2",
+    "qs": "^6.12.0",
     "vue-deepunref": "^1.0.1"
   },
   "devDependencies": {
-    "@appril/tsconfig": "^0.2.3",
+    "@appril/tsconfig": "^0.2.5",
     "@biomejs/biome": "^1.5.3",
     "@types/follow-redirects": "^1.14.4",
     "@types/form-data": "^2.5.0",
-    "@types/node": "^20.11.19",
-    "@types/qs": "^6.9.11",
+    "@types/node": "^20.11.25",
+    "@types/qs": "^6.9.12",
     "esbuild": "^0.20.1",
     "release-it": "^17.1.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   }
 }
