@@ -1,5 +1,5 @@
-import type { ClientRequest, IncomingMessage } from "http";
-import { validateHeaderName, validateHeaderValue } from "http";
+import type { ClientRequest, IncomingMessage } from "node:http";
+import { validateHeaderName, validateHeaderValue } from "node:http";
 
 import { stringify } from "qs";
 
