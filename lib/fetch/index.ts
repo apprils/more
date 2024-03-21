@@ -24,8 +24,13 @@ const defaultHeaders = {
 
 function fetch(base: string | URL, opts?: Options): FetchMapper {
   const {
-    unref,
-    stringify,
+    serialize = (d: unknown) => d,
+    stringify = (data: unknown) => {
+      return qs.stringify(data, {
+        encodeValuesOnly: true,
+        arrayFormat: "brackets",
+      });
+    },
     responseMode,
     headers,
     errorHandler,
@@ -51,7 +56,7 @@ function fetch(base: string | URL, opts?: Options): FetchMapper {
 
       if (isObject(args[args.length - 1])) {
         path = args.slice(0, args.length - 1) as PathEntry[];
-        data = unref(args[args.length - 1]) as GenericObject;
+        data = serialize(args[args.length - 1]) as GenericObject;
       } else {
         path = args as PathEntry[];
       }
@@ -65,16 +70,9 @@ function fetch(base: string | URL, opts?: Options): FetchMapper {
       };
 
       if (["GET", "DELETE"].includes(method)) {
-        const defaultStringify = (data: GenericObject) =>
-          qs.stringify(data, {
-            encodeValuesOnly: true,
-            arrayFormat: "brackets",
-          });
-
-        const query = ["?", (stringify || defaultStringify)(data)].join("");
-
-        if (query.length > 1) {
-          url += query;
+        const query = stringify(data);
+        if (query.length) {
+          url = [url, query].join("?");
         }
       } else {
         config.body = JSON.stringify(data);

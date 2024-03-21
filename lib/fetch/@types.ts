@@ -1,9 +1,8 @@
-type Unref = (v: unknown) => unknown;
+type Serialize = (v: unknown) => unknown;
 type Stringify = (o: Record<string | number, unknown>) => string;
 type ErrorHandler = (e: unknown) => void;
 
 export type Config = {
-  unref: Unref;
   responseMode: ResponseMode;
   errorHandler?: ErrorHandler;
 };
@@ -34,7 +33,7 @@ export type Options = Pick<
   | "signal"
   | "window"
 > & {
-  unref?: Unref;
+  serialize?: Serialize;
   stringify?: Stringify;
   responseMode?: ResponseMode;
   errorHandler?: ErrorHandler;

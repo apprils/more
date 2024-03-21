@@ -29,8 +29,11 @@
     "// ✨ builders": "",
     "esbuilder": "set -e; func() { e=$1; shift; esbuild lib/$e.ts --outfile=pkg/$e.js --bundle --platform=node --target=node20 --packages=external --sourcemap=inline $*; }; func",
     "// ✨ build": "",
-    "prebuild": "mkdir -p pkg; find pkg -type f -exec rm -fv {} \\;",
-    "build": "set -e; npm run lint; npm run tsc; for e in fetch/index request/index; do npm run esbuilder $e; done"
+    "prebuild:000": "mkdir -p pkg; find pkg -type f -exec rm -fv {} \\;",
+    "prebuild:001": "npm run lint",
+    "prebuild:002": "npm run tsc",
+    "prebuild": "set -e; for i in 0 1 2; do npm run prebuild:00${i}; done",
+    "build": "set -e; for e in fetch/index request/index; do npm run esbuilder $e; done"
   },
   "release-it": {
     "hooks": {
@@ -42,8 +45,7 @@
   "dependencies": {
     "follow-redirects": "^1.15.5",
     "form-data": "^4.0.0",
-    "qs": "^6.12.0",
-    "vue-deepunref": "^1.0.1"
+    "qs": "^6.12.0"
   },
   "devDependencies": {
     "@appril/configs": "^0.2.6",
