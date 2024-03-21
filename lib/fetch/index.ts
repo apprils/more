@@ -27,8 +27,9 @@ function fetch(base: string | URL, opts?: Options): FetchMapper {
     serialize = (d: unknown) => d,
     stringify = (data: unknown) => {
       return qs.stringify(data, {
-        encodeValuesOnly: true,
         arrayFormat: "brackets",
+        indices: false,
+        encodeValuesOnly: true,
       });
     },
     responseMode,
