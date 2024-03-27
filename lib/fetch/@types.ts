@@ -7,8 +7,6 @@ export type Config = {
   errorHandler?: ErrorHandler;
 };
 
-export type GenericObject = Record<string, unknown>;
-
 export type APIMethod = "get" | "post" | "put" | "patch" | "delete";
 
 export type ResponseMode =

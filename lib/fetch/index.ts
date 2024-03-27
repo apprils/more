@@ -1,17 +1,13 @@
 import qs from "qs";
 
-import type {
-  Options,
-  GenericObject,
-  HTTPError,
-  FetchMethod,
-  FetchMapper,
-} from "./@types";
+import type { Options, HTTPError, FetchMethod, FetchMapper } from "./@types";
 
 import config from "./config";
 
 export { config, fetch };
 export * from "./@types";
+
+type GenericObject = Record<string, unknown>;
 
 type PathEntry = string | number;
 
@@ -43,26 +39,27 @@ function fetch(base: string | URL, opts?: Options): FetchMapper {
     function _wrapper<T>(): Promise<T>;
 
     // path without data
-    function _wrapper<T>(...path: PathEntry[]): Promise<T>;
-
-    // data without path
-    function _wrapper<T>(data: GenericObject): Promise<T>;
+    function _wrapper<T>(path: PathEntry | PathEntry[]): Promise<T>;
 
     // path and data
-    function _wrapper<T>(...args: [...PathEntry[], GenericObject]): Promise<T>;
+    function _wrapper<T>(
+      path: PathEntry | PathEntry[],
+      data: GenericObject,
+    ): Promise<T>;
 
-    function _wrapper<T>(...args: unknown[]): Promise<T> {
-      let path: PathEntry[] = [];
-      let data: GenericObject = {};
+    function _wrapper<T>(
+      _path?: PathEntry | PathEntry[],
+      _data?: GenericObject,
+    ): Promise<T> {
+      const path = Array.isArray(_path)
+        ? _path
+        : ["string", "number"].includes(typeof _path)
+          ? [_path]
+          : [];
 
-      if (isObject(args[args.length - 1])) {
-        path = args.slice(0, args.length - 1) as PathEntry[];
-        data = serialize(args[args.length - 1]) as GenericObject;
-      } else {
-        path = args as PathEntry[];
-      }
+      const data = Object.assign({}, _data || {});
 
-      let url = join(String(base), ...path);
+      let url = join(String(base), ...(path as PathEntry[]));
 
       const config: Options & { method: HTTPMethod; body?: string } = {
         ...fetchConfig,
@@ -121,10 +118,6 @@ const pathTypes: { [key: string]: boolean } = {
   "[object Number]": true,
   "[object String]": true,
 };
-
-function isObject(arg: unknown) {
-  return Object.prototype.toString.call(arg) === "[object Object]";
-}
 
 function join(...args: PathEntry[]) {
   for (const a of args) {
