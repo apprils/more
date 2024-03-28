@@ -48,8 +48,8 @@
     "qs": "^6.12.0"
   },
   "devDependencies": {
-    "@appril/configs": "^0.2.7",
-    "@biomejs/biome": "^1.6.1",
+    "@appril/configs": "^0.2.8",
+    "@biomejs/biome": "^1.6.3",
     "@types/follow-redirects": "^1.14.4",
     "@types/form-data": "^2.5.0",
     "@types/node": "^20.11.30",
